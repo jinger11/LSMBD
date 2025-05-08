@@ -1,0 +1,218 @@
+Q1
+	1
+	--------------------------------------------
+	2
+		SELECT inst_name from instructor 
+		where salary > ANY(
+		select salary from instructor 
+		WHERE dept_name = 'Biology');
+	--------------------------------------------
+	3
+		SELECT dept_name from department WHERE dept_name like '%i%';
+	--------------------------------------------
+Q2	
+	1
+		SELECT inst_name from instructor WHERE salary > 70000;
+	--------------------------------------------
+	2
+	CREATE VIEW SimpleInstructorCourse AS
+	SELECT 
+    Instructor.inst_name AS inst_name,
+    Course.title AS course_title
+	FROM Instructor
+	JOIN teacher ON Instructor.instrutor_id = teacher.inst_id
+	JOIN Course ON teacher.course_id = Course.course_id;
+	--------------------------------------------
+	3
+	SELECT inst_name FROM instructor where LENGTH(inst_name) = 5;
+	--------------------------------------------
+
+Q3 
+	1 Create a view to find instructor name and course for instructors in IT department 
+
+		CREATE VIEW courseview as 
+		SELECT 
+		instructor.inst_name as inst_name,
+		course.title as course_title 
+		From instructor
+		JOIN teacher on instructor.instrutor_id = teacher.inst_id
+		JOIN course on teacher.course_id = course.course_id
+		WHERE instructor.dept_name ='IT';
+	--------------------------------------------
+	2 Find titles along with department where department must end with “ y ”
+
+		SELECT dept_name from department WHERE dept_name like '%y' ;
+
+	--------------------------------------------
+	3 Find the names of all instructors whose salary is greater than at least one instructor in biology dept
+		SELECT inst_name from instructor 
+		where salary > ANY(
+		select salary from instructor 
+		WHERE dept_name = 'Biology');
+	--------------------------------------------
+	4  Find the titles along with department name of 	biology department.
+		SELECT title, dept_name from course WHERE dept_name ='Biology' ;
+
+	--------------------------------------------
+Q4
+	1Find the average salary of the instructors who are in music dept.
+
+		SELECT AVG(salary) from instructor WHERE dept_name ='music' ;
+	--------------------------------------------
+	2 Find the average salary of the instructors all dept.
+		SELECT dept_name,AVG(salary) from instructor GROUP by dept_name;
+
+	--------------------------------------------
+	3 Find out department name with average salary in each department where average salary is greater than 40000
+
+		SELECT dept_name,AVG(salary) from instructor GROUP By dept_name HAVING AVG(salary)>40000;
+	--------------------------------------------
+Q5
+	1  Find the names of all instructors in music dept who have salary greater than 50000
+
+		SELECT salary from instructor Where dept_name='music' HAVING salary >50000;
+
+	--------------------------------------------
+	2  Find the details of instructors who are teaching some courses
+
+		SELECT DISTINCT i.*
+		from instructor i 
+		Join teacher t On i.instrutor_id=t.inst_id;
+
+	--------------------------------------------
+	3 List all instructors along with the courses that they teach.
+
+		SELECT 
+		i.inst_name AS instructor_name,
+		c.title AS course_title
+		FROM Instructor i
+		JOIN teacher t ON i.instrutor_id = t.inst_id
+		JOIN Course c ON t.course_id = c.course_id;
+	--------------------------------------------
+	4 List instructors in descending order.
+
+	SELECT *  FROM Instructor ORDER BY inst_name DESC;
+	--------------------------------------------
+	
+Q6
+	1 Find the names of instructors who are working in IT dept.
+
+	SELECT inst_name FROM Instructor where dept_name='IT';
+	--------------------------------------------
+	2 Create a view to find out only instructors who have taught some course.
+		
+		CREATE VIEW Instructors_Taught_Courses AS
+		SELECT DISTINCT i.*
+		FROM Instructor i
+		JOIN teacher t ON i.instrutor_id = t.inst_id;
+		
+	--------------------------------------------
+	3 Give the increment of rs. 10000 to instructors whose salary is less than 40000 else give increment of rs.20000.
+	UPDATE Instructor
+	SET salary = salary + CASE 
+        WHEN salary < 40000 THEN 10000
+        ELSE 20000
+    END;
+	--------------------------------------------
+	4 Find the average salary of the instructors all dept.
+		SELECT dept_name,AVG(salary) from instructor GROUP by dept_name;
+	--------------------------------------------
+
+7
+	1 Find the average salary of the instructors all dept.
+		SELECT dept_name,AVG(salary) from instructor GROUP by dept_name;
+	--------------------------------------------
+	2 Find number of instructors with department name in each department
+		SELECT dept_name, COUNT(*) AS instructor_count
+		FROM Instructor
+		GROUP BY dept_name;
+	--------------------------------------------
+	3 Find the names of all departments whose name includes substring “ i ”.
+		SELECT dept_name from department WHERE dept_name like '%i%';
+	--------------------------------------------
+	4 List the entire instructor relation in descending order
+	SELECT * FROM Instructor ORDER BY inst_name DESC;
+	--------------------------------------------
+
+8
+	1 Find the name of students who have taken some courses
+		SELECT DISTINCT s.sname FROM Student s JOIN Takes t ON s.sid = t.sid;
+	--------------------------------------------
+	2 Find the details of the students who are in Computer department
+	SELECT * FROM Student WHERE dept_name = 'Computer';
+	--------------------------------------------
+	3 Find the names of all departments whose name includes substring “ a ”.
+	SELECT dept_name FROM Department WHERE dept_name LIKE '%a%';
+
+	--------------------------------------------
+	
+9
+	1 Find average marks of each student, along with the name of student
+		SELECT s.Name, AVG(m.Marks) AS Average_Marks
+		FROM Student s
+		JOIN Marks m ON s.RollNo = m.RollNo
+		GROUP BY s.RollNo, s.Name;
+
+	--------------------------------------------
+	2	Find how many students have failed in the subject “DBMS”
+		SELECT COUNT(DISTINCT m.RollNo) AS Failed_Students
+		FROM Marks m
+		JOIN Subject s ON m.SubCode = s.SubCode
+		WHERE s.SubName = 'DBMS' AND m.Marks < 40;
+
+	--------------------------------------------
+	3 Find the number of students who are passed in “OS”
+		SELECT COUNT(DISTINCT m.RollNo) AS Passed_Students
+		FROM Marks m
+		JOIN Subject s ON m.SubCode = s.SubCode
+		WHERE s.SubName = 'OS' AND m.Marks >= 40;
+
+	--------------------------------------------
+	4 Find the maximum marks of the subject “TOC”
+	
+		SELECT MAX(m.Marks) AS Max_Marks
+		FROM Marks m
+		JOIN Subject s ON m.SubCode = s.SubCode
+		WHERE s.SubName = 'TOC';
+
+	--------------------------------------------
+	
+10 
+	1 Find the names of suppliers who supply some red parts
+		SELECT DISTINCT s.Sname
+		FROM Supplier s
+		JOIN Catalog c ON s.Sid = c.Sid
+		JOIN Parts p ON c.Pid = p.Pid
+		WHERE p.color = 'red';
+
+	--------------------------------------------
+	2 Find the names of all parts whose cost is more than Rs.250
+		SELECT DISTINCT p.Pname
+		FROM Parts p
+		JOIN Catalog c ON p.Pid = c.Pid
+		WHERE c.cost > 250;
+
+	--------------------------------------------
+	3 Find name of all parts whose color is green
+	
+		SELECT Pname FROM Parts WHERE color = 'green';
+
+	--------------------------------------------
+	4 Find number of parts supplied by each supplier
+	
+	SELECT s.Sname, COUNT(c.Pid) AS NumberOfParts
+	FROM Supplier s
+	JOIN Catalog c ON s.Sid = c.Sid
+	GROUP BY s.Sname;
+
+	--------------------------------------------
+	
+11
+	1
+	--------------------------------------------
+	2
+	--------------------------------------------
+	3
+	--------------------------------------------
+	4
+	--------------------------------------------
