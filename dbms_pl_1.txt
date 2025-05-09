@@ -1,0 +1,16 @@
+DELIMITER $$
+
+CREATE PROCEDURE calculate_grades()
+BEGIN
+  UPDATE students
+  SET grade = CASE
+    WHEN marks >= 90 THEN 'A+'
+    WHEN marks >= 80 THEN 'A'
+    WHEN marks >= 70 THEN 'B'
+    WHEN marks >= 60 THEN 'C'
+    WHEN marks >= 50 THEN 'D'
+    ELSE 'F'
+  END;
+END$$
+
+DELIMITER ;

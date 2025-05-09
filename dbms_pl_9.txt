@@ -1,0 +1,44 @@
+-- Main employee table
+CREATE TABLE employee (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(50),
+  salary DECIMAL(10,2),
+  dept INT
+);
+
+-- Log table to track inserts and deletes
+CREATE TABLE employee_log (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  emp_id INT,
+  action VARCHAR(50),
+  log_time DATETIME
+);
+
+
+DELIMITER $$
+
+-- BEFORE INSERT Trigger
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employee
+FOR EACH ROW
+BEGIN
+  INSERT INTO employee_log(emp_id, action, log_time)
+  VALUES (NEW.emp_id, 'BEFORE INSERT', NOW());
+END$$
+
+-- AFTER DELETE Trigger
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employee
+FOR EACH ROW
+BEGIN
+  INSERT INTO employee_log(emp_id, action, log_time)
+  VALUES (OLD.emp_id, 'AFTER DELETE', NOW());
+END$$
+
+DELIMITER ;
+
+TEST--
+INSERT INTO employee(emp_id, emp_name, salary, dept)
+VALUES (101, 'Alice', 55000, 101);
+
+DELETE FROM employee WHERE emp_id = 101;

@@ -1,0 +1,16 @@
+DELIMITER $$
+
+CREATE FUNCTION countemp(p_dept INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE count_emp INT;
+
+    SELECT COUNT(*) INTO count_emp
+    FROM employee
+    WHERE dept = p_dept;
+
+    RETURN count_emp;
+END$$
+
+DELIMITER ;

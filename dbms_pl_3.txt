@@ -1,0 +1,25 @@
+DELIMITER $$
+
+CREATE FUNCTION givestatus(id INT)
+RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+    DECLARE emp_salary DECIMAL(10,2);
+    DECLARE status VARCHAR(10);
+    
+    -- Get the salary from the employee table
+    SELECT salary INTO emp_salary FROM employee
+    WHERE emp_id = id;
+    
+    -- Check salary and set status
+    IF emp_salary < 50000 THEN
+        SET status = 'low';
+    ELSE
+        SET status = 'high';
+    END IF;
+
+    -- Return the status
+    RETURN status;
+END$$
+
+DELIMITER ;

@@ -1,0 +1,23 @@
+DELIMITER $$
+
+CREATE PROCEDURE arthmetic(
+    IN num1 INT,
+    IN num2 INT,
+    IN sign VARCHAR(2),
+    OUT result INT
+)
+BEGIN 
+    IF sign = '+' THEN
+        SET result = num1 + num2;
+    ELSEIF sign = '-' THEN
+        SET result = num1 - num2;
+    ELSEIF sign = '*' THEN
+        SET result = num1 * num2;
+    ELSEIF sign = '/' THEN
+        SET result = num1 / num2;
+    ELSE
+        SET result = 0;
+    END IF;
+END$$
+
+DELIMITER ;

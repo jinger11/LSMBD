@@ -1,0 +1,30 @@
+1.
+DELIMITER $$
+
+CREATE PROCEDURE add_employee(
+   IN id INT,
+   IN name VARCHAR(20),
+   IN salary DECIMAL(10,2)
+)
+BEGIN 
+  INSERT INTO employee(emp_id, emp_name, salary)
+  VALUES(id, name, salary);
+END$$
+
+DELIMITER ;
+
+
+2.
+DELIMITER $$
+
+CREATE PROCEDURE countemp(
+    IN id INT,
+    OUT emp_count INT
+)
+BEGIN
+    SELECT COUNT(*) INTO emp_count 
+    FROM employee 
+    WHERE dept = id;
+END$$
+
+DELIMITER ;
