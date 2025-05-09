@@ -1,0 +1,381 @@
+1. University Database Creation:
+sql
+Copy
+Edit
+-- Creating the University Database
+CREATE DATABASE University;
+
+-- Switching to the University Database
+USE University;
+
+-- Creating the Department Table
+CREATE TABLE Department (
+    dept_name VARCHAR(100),
+    building VARCHAR(100),
+    budget DECIMAL(15, 2)
+);
+
+-- Creating the Instructor Table
+CREATE TABLE Instructor (
+    inst_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(15, 2),
+    dept_name VARCHAR(100),
+    FOREIGN KEY (dept_name) REFERENCES Department(dept_name)
+);
+
+-- Creating the Course Table
+CREATE TABLE Course (
+    course_id INT PRIMARY KEY,
+    title VARCHAR(100),
+    credits INT,
+    dept_name VARCHAR(100),
+    FOREIGN KEY (dept_name) REFERENCES Department(dept_name)
+);
+
+-- Creating the Teaches Table
+CREATE TABLE Teaches (
+    course_id INT,
+    inst_id INT,
+    PRIMARY KEY (course_id, inst_id),
+    FOREIGN KEY (course_id) REFERENCES Course(course_id),
+    FOREIGN KEY (inst_id) REFERENCES Instructor(inst_id)
+);
+2. Queries and SQL Commands:
+a) Create a View to Find Instructors Who Have Taught Some Course:
+sql
+Copy
+Edit
+CREATE VIEW Instructors_Who_Taught_Courses AS
+SELECT DISTINCT i.name AS instructor_name
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id;
+b) Find Names of All Instructors Whose Salary is Greater Than at Least One Instructor in the Biology Dept:
+sql
+Copy
+Edit
+SELECT i.name
+FROM Instructor i
+WHERE i.salary > (
+    SELECT MAX(i2.salary)
+    FROM Instructor i2
+    WHERE i2.dept_name = 'Biology'
+);
+c) Find Names of All Departments Whose Name Includes Substring “i”:
+sql
+Copy
+Edit
+SELECT dept_name
+FROM Department
+WHERE dept_name LIKE '%i%';
+3. Continue with more queries from the next set:
+d) Find Names of All Instructors in the Computer Dept Who Have Salary Greater Than 70000:
+sql
+Copy
+Edit
+SELECT name
+FROM Instructor
+WHERE dept_name = 'Computer' AND salary > 70000;
+e) Create a View Using More Than Two Tables:
+sql
+Copy
+Edit
+CREATE VIEW Instructor_Course_Details AS
+SELECT i.name AS instructor_name, c.title AS course_title, c.credits
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id
+JOIN Course c ON t.course_id = c.course_id;
+f) Find Names of Instructors Whose Names Are Exactly Five Characters:
+sql
+Copy
+Edit
+SELECT name
+FROM Instructor
+WHERE LENGTH(name) = 5;
+
+4. Queries and SQL Commands:
+g) Create a View to Find Instructor Name and Course for Instructors in IT Department:
+sql
+Copy
+Edit
+CREATE VIEW IT_Instructors_Courses AS
+SELECT i.name AS instructor_name, c.title AS course_title
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id
+JOIN Course c ON t.course_id = c.course_id
+WHERE i.dept_name = 'IT';
+h) Find Names of All Instructors Whose Salary is Greater Than at Least One Instructor in Biology Dept:
+sql
+Copy
+Edit
+SELECT i.name
+FROM Instructor i
+WHERE i.salary > (
+    SELECT MAX(i2.salary)
+    FROM Instructor i2
+    WHERE i2.dept_name = 'Biology'
+);
+i) Find Titles Along with Department Where Department Must End with “y”:
+sql
+Copy
+Edit
+SELECT c.title, c.dept_name
+FROM Course c
+WHERE c.dept_name LIKE '%y';
+j) Find Titles Along with Department Name of Biology Department:
+sql
+Copy
+Edit
+SELECT c.title, c.dept_name
+FROM Course c
+WHERE c.dept_name = 'Biology';
+5. More Queries for University Database:
+k) Find the Average Salary of Instructors Who Are in Music Department:
+sql
+Copy
+Edit
+SELECT AVG(salary) AS average_salary
+FROM Instructor
+WHERE dept_name = 'Music';
+l) Find the Average Salary in Each Dept:
+sql
+Copy
+Edit
+SELECT dept_name, AVG(salary) AS average_salary
+FROM Instructor
+GROUP BY dept_name;
+m) Find Department Name with Average Salary in Each Department Where Average Salary is Greater Than 40000:
+sql
+Copy
+Edit
+SELECT dept_name, AVG(salary) AS average_salary
+FROM Instructor
+GROUP BY dept_name
+HAVING AVG(salary) > 40000;
+6. More Queries for University Database:
+n) Find Names of All Instructors in Music Dept Who Have Salary Greater Than 50000:
+sql
+Copy
+Edit
+SELECT name
+FROM Instructor
+WHERE dept_name = 'Music' AND salary > 50000;
+o) Find the Details of Instructors Who Are Teaching Some Courses:
+sql
+Copy
+Edit
+SELECT i.inst_id, i.name, i.salary, i.dept_name
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id;
+p) List All Instructors Along with the Courses That They Teach:
+sql
+Copy
+Edit
+SELECT i.name AS instructor_name, c.title AS course_title
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id
+JOIN Course c ON t.course_id = c.course_id;
+q) List Instructors in Descending Order of Salary:
+sql
+Copy
+Edit
+SELECT name
+FROM Instructor
+ORDER BY salary DESC;
+7. More Queries for University Database:
+r) Find Names of Instructors Who Are Working in IT Department:
+sql
+Copy
+Edit
+SELECT name
+FROM Instructor
+WHERE dept_name = 'IT';
+s) Create a View to Find Out Only Instructors Who Have Taught Some Course:
+sql
+Copy
+Edit
+CREATE VIEW Instructors_Who_Taught_Courses AS
+SELECT DISTINCT i.name AS instructor_name
+FROM Instructor i
+JOIN Teaches t ON i.inst_id = t.inst_id;
+t) Give the Increment of Rs. 10000 to Instructors Whose Salary is Less Than 40000, Else Give Increment of Rs. 20000:
+sql
+Copy
+Edit
+UPDATE Instructor
+SET salary = CASE
+    WHEN salary < 40000 THEN salary + 10000
+    ELSE salary + 20000
+END;
+u) Find Average Salary in Each Department:
+sql
+Copy
+Edit
+SELECT dept_name, AVG(salary) AS average_salary
+FROM Instructor
+GROUP BY dept_name;
+8. More Queries for University Database:
+v) Find the Number of Instructors with Department Name in Each Department:
+sql
+Copy
+Edit
+SELECT dept_name, COUNT(*) AS num_instructors
+FROM Instructor
+GROUP BY dept_name;
+w) Find the Names of All Departments Whose Name Includes Substring “i”:
+sql
+Copy
+Edit
+SELECT dept_name
+FROM Department
+WHERE dept_name LIKE '%i%';
+x) List the Entire Instructor Relation in Descending Order:
+sql
+Copy
+Edit
+SELECT * FROM Instructor
+ORDER BY inst_id DESC;
+
+
+9. Queries for University Database:
+y) Find the Name of Students Who Have Taken Some Courses:
+sql
+Copy
+Edit
+SELECT DISTINCT s.sname
+FROM Student s
+JOIN Takes t ON s.sid = t.sid;
+z) Find the Details of the Students Who Are in Computer Department:
+sql
+Copy
+Edit
+SELECT s.sid, s.sname, s.tot_credits, s.dept_name, s.grade
+FROM Student s
+WHERE s.dept_name = 'Computer';
+aa) Find the Names of All Departments Whose Name Includes Substring “a”:
+sql
+Copy
+Edit
+SELECT dept_name
+FROM Department
+WHERE dept_name LIKE '%a%';
+10. Queries for a Relational Database (Student, Subject, Marks):
+ab) Find Average Marks of Each Student, Along with the Name of Student:
+sql
+Copy
+Edit
+SELECT s.Name, AVG(m.Marks) AS average_marks
+FROM Student s
+JOIN Marks m ON s.RollNo = m.RollNo
+GROUP BY s.Name;
+ac) Find How Many Students Have Failed in the Subject “DBMS”:
+sql
+Copy
+Edit
+SELECT COUNT(DISTINCT m.RollNo) AS failed_students
+FROM Marks m
+JOIN Subject sub ON m.SubCode = sub.SubCode
+WHERE sub.SubName = 'DBMS' AND m.Marks < 40;
+ad) Find the Number of Students Who Are Passed in “OS”:
+sql
+Copy
+Edit
+SELECT COUNT(DISTINCT m.RollNo) AS passed_students
+FROM Marks m
+JOIN Subject sub ON m.SubCode = sub.SubCode
+WHERE sub.SubName = 'OS' AND m.Marks >= 40;
+ae) Find the Maximum Marks of the Subject “TOC”:
+sql
+Copy
+Edit
+SELECT MAX(m.Marks) AS max_marks
+FROM Marks m
+JOIN Subject sub ON m.SubCode = sub.SubCode
+WHERE sub.SubName = 'TOC';
+11. Queries for Supplier, Parts, and Catalog Database:
+af) Find the Names of Suppliers Who Supply Some Red Parts:
+sql
+Copy
+Edit
+SELECT DISTINCT s.Sname
+FROM Supplier s
+JOIN Catalog c ON s.Sid = c.Sid
+JOIN Parts p ON c.Pid = p.Pid
+WHERE p.color = 'Red';
+ag) Find the Names of All Parts Whose Cost is More Than Rs.250:
+sql
+Copy
+Edit
+SELECT p.Pname
+FROM Parts p
+JOIN Catalog c ON p.Pid = c.Pid
+WHERE c.cost > 250;
+ah) Find the Name of All Parts Whose Color is Green:
+sql
+Copy
+Edit
+SELECT p.Pname
+FROM Parts p
+WHERE p.color = 'Green';
+ai) Find Number of Parts Supplied by Each Supplier:
+sql
+Copy
+Edit
+SELECT s.Sname, COUNT(c.Pid) AS num_parts
+FROM Supplier s
+JOIN Catalog c ON s.Sid = c.Sid
+GROUP BY s.Sname;
+12. Repeating the Queries from Earlier Database:
+aj) Find the Name of Students Who Have Taken Some Courses:
+sql
+Copy
+Edit
+SELECT DISTINCT s.sname
+FROM Student s
+JOIN Takes t ON s.sid = t.sid;
+ak) Find the Details of the Students Who Are in Computer Department:
+sql
+Copy
+Edit
+SELECT s.sid, s.sname, s.tot_credits, s.dept_name, s.grade
+FROM Student s
+WHERE s.dept_name = 'Computer';
+al) Find the Names of All Departments Whose Name Includes Substring “a”:
+sql
+Copy
+Edit
+SELECT dept_name
+FROM Department
+WHERE dept_name LIKE '%a%';
+am) Find the Names of Suppliers Who Supply Some Red Parts:
+sql
+Copy
+Edit
+SELECT DISTINCT s.Sname
+FROM Supplier s
+JOIN Catalog c ON s.Sid = c.Sid
+JOIN Parts p ON c.Pid = p.Pid
+WHERE p.color = 'Red';
+an) Find the Names of All Parts Whose Cost is More Than Rs.250:
+sql
+Copy
+Edit
+SELECT p.Pname
+FROM Parts p
+JOIN Catalog c ON p.Pid = c.Pid
+WHERE c.cost > 250;
+ao) Find the Name of All Parts Whose Color is Green:
+sql
+Copy
+Edit
+SELECT p.Pname
+FROM Parts p
+WHERE p.color = 'Green';
+ap) Find Number of Parts Supplied by Each Supplier:
+sql
+Copy
+Edit
+SELECT s.Sname, COUNT(c.Pid) AS num_parts
+FROM Supplier s
+JOIN Catalog c ON s.Sid = c.Sid
+GROUP BY s.Sname;
